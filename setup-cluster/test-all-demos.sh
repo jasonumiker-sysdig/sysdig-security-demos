@@ -4,7 +4,7 @@
 
 kubectl get pods -A
 echo "--------------------"
-cd ~/kubernetes-security-demos
+cd ~/sysdig-security-demos
 cat team1.yaml
 echo "--------------------"
 kubectl api-resources
@@ -23,7 +23,7 @@ kubectl get pods -A
 echo "--------------------"
 kubectl get pods
 echo "--------------------"
-cd ~/kubernetes-security-demos/demos/network-policy/hello-app
+cd ~/sysdig-security-demos/demos/network-policy/hello-app
 kubectl apply -f .
 echo "--------------------"
 kubectl get pods
@@ -40,7 +40,7 @@ kubectl config get-contexts
 echo "--------------------"
 kubectl describe secret hello-secret -n team1
 echo "--------------------"
-cd ~/kubernetes-security-demos/demos
+cd ~/sysdig-security-demos/demos
 cat nsenter-node.sh
 echo "--------------------"
 #./nsenter-node.sh
@@ -53,7 +53,7 @@ echo "--------------------"
 #exit
 #crictl stop $HELLO_CLIENT_CONTAINER_ID && crictl rm $HELLO_CLIENT_CONTAINER_ID
 #exit
-cd ~/kubernetes-security-demos/demos/security-playground
+cd ~/sysdig-security-demos/demos/security-playground
 cat app.py
 echo "--------------------"
 cat example-curls.sh
@@ -67,32 +67,32 @@ kubectl get pods -n security-playground
 echo "--------------------"
 ./example-curls.sh
 echo "--------------------"
-cd ~/kubernetes-security-demos/opa-gatekeeper
+cd ~/sysdig-security-demos/opa-gatekeeper
 cat ./install-gatekeeper.sh
 echo "--------------------"
 ./install-gatekeeper.sh
 echo "--------------------"
-cd ~/kubernetes-security-demos/demos
+cd ~/sysdig-security-demos/demos
 ./nsenter-node.sh
 echo "--------------------"
-cd ~/kubernetes-security-demos/opa-gatekeeper/policies/constraint-templates/
-cd ~/kubernetes-security-demos/opa-gatekeeper/policies/constraints
-cd ~/kubernetes-security-demos/opa-gatekeeper
+cd ~/sysdig-security-demos/opa-gatekeeper/policies/constraint-templates/
+cd ~/sysdig-security-demos/opa-gatekeeper/policies/constraints
+cd ~/sysdig-security-demos/opa-gatekeeper
 ./uninstall-gatekeeper.sh
 echo "--------------------"
-cd ~/kubernetes-security-demos/demos/security-playground
+cd ~/sysdig-security-demos/demos/security-playground
 kubectl logs deployment/hello-client-allowed -n team1
 echo "--------------------"
 kubectl logs deployment/hello-client-blocked -n team1
 echo "--------------------"
-cd ~/kubernetes-security-demos/demos/network-policy/hello-app
+cd ~/sysdig-security-demos/demos/network-policy/hello-app
 kubectl apply -f  hello-client.yaml -n team2
 echo "--------------------"
 kubectl logs deployment/hello-client-allowed -n team2
 echo "--------------------"
 kubectl logs deployment/hello-client-blocked -n team2
 echo "--------------------"
-cd ~/kubernetes-security-demos/demos/network-policy
+cd ~/sysdig-security-demos/demos/network-policy
 cat network-policy-namespace.yaml
 echo "--------------------"
 kubectl apply -f network-policy-namespace.yaml -n team1
@@ -101,12 +101,12 @@ kubectl logs deployment/hello-client-allowed -n team1
 echo "--------------------"
 kubectl logs deployment/hello-client-blocked -n team1
 echo "--------------------"
-cd ~/kubernetes-security-demos/demos/network-policy/hello-app
+cd ~/sysdig-security-demos/demos/network-policy/hello-app
 kubectl logs deployment/hello-client-allowed -n team2
 echo "--------------------"
 kubectl logs deployment/hello-client-blocked -n team2
 echo "--------------------"
-cd ~/kubernetes-security-demos/demos/network-policy
+cd ~/sysdig-security-demos/demos/network-policy
 cat network-policy-label.yaml
 echo "--------------------"
 kubectl apply -f network-policy-label.yaml -n team1

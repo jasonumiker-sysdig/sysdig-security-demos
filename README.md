@@ -6,7 +6,7 @@ These are demos of the topics discussed my recent blog post - https://sysdig.com
 
 Mac:
 1. Install microk8s with a `brew install microk8s`
-1. Clone this repo - `git clone https://github.com/jasonumiker-sysdig/kubernetes-security-demos.git`
+1. Clone this repo - `git clone https://github.com/jasonumiker-sysdig/sysdig-security-demos.git`
 1. Run `setup-cluster/setup-microk8s-vm.sh` if on an Intel MAC and `setup-cluster/setup-microk8s-vm-arm.sh` if on an M1/M2 Mac.
 
 NOTE: On an M1/M2 Mac the Falcosidekick UI is currently unsupported so the workshop substitutes in an Elastic/Kibana to see the Falco events instead.
@@ -15,13 +15,13 @@ Windows:
 1. Be running a Pro or Enterprise version of Windows 10/11 that can do Hyper-V
 1. Install microk8s - https://microk8s.io/docs/install-windows
 1. Install git - https://gitforwindows.org/
-1. Clone this repo - `git clone https://github.com/jasonumiker-sysdig/kubernetes-security-demos.git`
+1. Clone this repo - `git clone https://github.com/jasonumiker-sysdig/sysdig-security-demos.git`
 1. Run `setup-cluster/setup-microk8s-vm-win.sh` from within a git bash shell/session
 
 Linux (via a VM managed by multipass):
 1. Install snap if it isn't included in your distro (e.g. `sudo dnf install snapd` on Fedora)
 1. Run `snap install multipass`
-1. Clone this repo - `git clone https://github.com/jasonumiker-sysdig/kubernetes-security-demos.git`
+1. Clone this repo - `git clone https://github.com/jasonumiker-sysdig/sysdig-security-demos.git`
 1. Run `setup-cluster/setup-microk8s-vm.sh`
 
 AWS:
@@ -53,7 +53,7 @@ Here are some other useful commands to manage that VM once it exists:
 
 ## Kubernetes Namespace and RBAC Demo
 1. `kubectl get pods -A` - We are currently signed in as the admin ClusterRole - we can do anything cluster-wide
-1. `cd ~/kubernetes-security-demos`
+1. `cd ~/sysdig-security-demos`
 1. `cat team1.yaml` - Here we're creating a new namespace, team1, and then creating the most basic and powerful Role possible that can do anything within that Namespace with *'s for apiGroups, Resources and Verbs. Like we said this is not a great idea especially on the verbs. Then finally we're binding that new Role to a user named Jane.
 1. `kubectl api-resources` this shows all the different resources that we can control the use of in our RBAC
 1. `kubectl get clusterrole admin -o yaml | less` - And we can ask for details on the few built-in ClusterRoles we can use as a guide. This admin role is intended to be for privileged users but not ones who can do anything. As you can see, the minute you don't do *s there is quite a lot of YAML here.
@@ -65,7 +65,7 @@ Here are some other useful commands to manage that VM once it exists:
 1. `kubectl config use-context microk8s-jane` - we've just logged in as Jane instead
 1. `kubectl get pods -A` if we try to ask to see all the Pods in all the namespaces again we now get an error that we can't use the cluster scope
 1. `kubectl get pods` removing the -A for all namespaces and it says we don't have any Pods in our team1 namespace which we do have access to
-1. `cd ~/kubernetes-security-demos/demos/network-policy/hello-app`
+1. `cd ~/sysdig-security-demos/demos/network-policy/hello-app`
 1. `kubectl apply -f .` - Let's deploy an app to our namespace
 1. `kubectl get pods` - As you can see we do have enough cluster access to deploy workloads within our team1 namespace
 1. `kubectl describe deployments hello-client-allowed` - Note under Pod Template -> Environment that a Kubernetes secret (hello-secret) is getting mounted as the environment variable API_KEY at runtime
@@ -81,7 +81,7 @@ So, that was a very quick overview of how to configure multi-tenancy of Kubernet
 ### Container Escape - impacting the Node and/or other workloads running there
 1. `kubectl config get-contexts` - Confirming we are still signed in as John who should be limited to the team2 namespace (as we gave him a Role there rather than a ClusterRole)
 1. `kubectl describe secret hello-secret -n team1` - as expected we can't get at team1's secrets as john (as he only has access to team2's namespace)
-1. `cd ~/kubernetes-security-demos/demos`
+1. `cd ~/sysdig-security-demos/demos`
 1. `cat nsenter-node.sh` - as we said you can ask for some things in your Podspecs such as hostPID and a privileged security context that allow you to break out of the Linux namespace boundaries of containers. This asks for those things and then runs a tool called ns-enter to leave our Linux namespace for the host one. This should result in us having an interactive shell to the Kubernetes Node and as root.
 1. `./nsenter-node.sh` - and there we go - we're now root@microk8s-vm which is our Kubernetes Node
 1. `ps aux` - when you are root in the host's Linux namespace you can see all the processes in all the containers
@@ -101,7 +101,7 @@ So even though we properly set up our Kubernetes RBAC and Namespaces this host-l
 There are also a number of things that we can do without needing to escape the container. The worst vulnerabilities allow you to do remote code execution (RCE) of the services via malformed network calls to them or insufficient security of the APIs they are exposing.
 
 To illustrate the worst-case-scenario of that we have the simplest and least secure Python app possible that we are calling security-playground:
-1. `cd ~/kubernetes-security-demos/demos/security-playground`
+1. `cd ~/sysdig-security-demos/demos/security-playground`
 1. `cat app.py` - we can see just see just how simple this Python app is - it'll read any file you ask it to with a RESTful GET, write any file you ask it to with a RESTful POST and even execute any file you want it to with a POST to the /exec URI path.
 1. `cat example-curls.sh` Since this is just REST we can do these exploits with just `curl` commands.
 1. `kubectl config use-context microk8s` - Let's go back to our admin role (to allow our kubectl get nodes to work)
@@ -123,14 +123,14 @@ We'll see in a future section that Falco recorded this nefarious runtime behavio
 ### Open Policy Agent (OPA) Gatekeeper
 The answer to this problem is the OPA Gatekeeper admission controller preventing me asking for those insecure parameters in my nsenter Podspec. This isn't there by default though in most clusters - even things like AWS EKS, Google GKE or MS AKS. Though in some you can opt-in to them. One way or the other if you are doing multi-tenancy you need to ensure you have it.
 
-1. `cd ~/kubernetes-security-demos/opa-gatekeeper`
+1. `cd ~/sysdig-security-demos/opa-gatekeeper`
 1. `cat ./install-gatekeeper.sh` - this script will install the OPA Gatekeeper Helm chart and then a few policies for it to enforce (which are in the form of Kubernetes custom resource definition (CRD) files/objects) that will do just that
 1. `./install-gatekeeper.sh` - let's run it
-1. `cd ~/kubernetes-security-demos/demos` - Okay now lets try our nsenter again
+1. `cd ~/sysdig-security-demos/demos` - Okay now lets try our nsenter again
 1. `./nsenter-node.sh` - As you can see we now have OPA Gatekeeper policies blocking all the insecure options nsenter was asking for that allowed us to peform our escape - so that Pod is no longer allowed to launch. I am protected by this new admission controller!
-1. `cd ~/kubernetes-security-demos/opa-gatekeeper/policies/constraint-templates/` then `cat` the various files in here to look at the policies (called constraint-templates) that made that possible
-1. `cd ~/kubernetes-security-demos/opa-gatekeeper/policies/constraints` then `cat` the various files in here - while the previous constraint-templates are the polices constraints say when - and when not to - apply those policies. So constraint-templates are not enforced until a constraint says where and/or where not to apply it.
-1. `cd ~/kubernetes-security-demos/opa-gatekeeper`
+1. `cd ~/sysdig-security-demos/opa-gatekeeper/policies/constraint-templates/` then `cat` the various files in here to look at the policies (called constraint-templates) that made that possible
+1. `cd ~/sysdig-security-demos/opa-gatekeeper/policies/constraints` then `cat` the various files in here - while the previous constraint-templates are the polices constraints say when - and when not to - apply those policies. So constraint-templates are not enforced until a constraint says where and/or where not to apply it.
+1. `cd ~/sysdig-security-demos/opa-gatekeeper`
 1. `./uninstall-gatekeeper.sh` - removing Gatekeeper for a future demo to work though
 
 These actually came from the Gatekeeper library on Github where there are a number of additional examples here - https://github.com/open-policy-agent/gatekeeper-library/tree/master/library
@@ -270,7 +270,7 @@ While there are many tools available for this, Docker has a partnership with Sny
 
 NOTE: If you do not have a free Docker Hub login, and don't want to sign up for one now, then this section is optional. Just review the steps rather than going through them and then move on to the next section.
 
-1. Run `cd ~/kubernetes-security-demos/demos/security-playground`
+1. Run `cd ~/sysdig-security-demos/demos/security-playground`
 1. Run `docker build -t security-playground:latest .`
 1. Create a free Docker Hub (https://hub.docker.com/) login if you do not already have one. Being signed into Docker CLI is also useful for increasing your limits to pull from Docker Hub (as they throttle authenticated free users less than anonymous ones on pulls).
 1. Run `docker login` to log in to the Docker CLI
@@ -303,21 +303,21 @@ We had already deployed a workload in team1 that included a server Pod (hello-se
 Out of the box all traffic is allowed which you can see as follows:
 1. `kubectl logs deployment/hello-client-allowed -n team1` as you can see it is getting a response from the server
 1. `kubectl logs deployment/hello-client-blocked -n team1` and our 'blocked' Pod is not yet blocked and is getting a response from the server as well
-1. `cd ~/kubernetes-security-demos/demos/network-policy/hello-app`
+1. `cd ~/sysdig-security-demos/demos/network-policy/hello-app`
 1. `kubectl apply -f  hello-client.yaml -n team2` Lets also deploy another set of our client Pods to the team2 namespace
 1. `kubectl logs deployment/hello-client-allowed -n team2` As you can see both the allowed
 1. `kubectl logs deployment/hello-client-blocked -n team2` And the 'blocked' Pods can contact our server pods from other Namespaces by default as well.
 
 There are two common ways to write NetworkPolicies to allow/deny traffic - against labels and against namespaces. And you can actually combine the two now as well. Let's start with namespaces:
-1. `cd ~/kubernetes-security-demos/demos/network-policy`
+1. `cd ~/sysdig-security-demos/demos/network-policy`
 1. `cat network-policy-namespace.yaml` As you can see here we are saying we are allowing traffic from Pods within the namespace team1 to Pods with the label app set to hello-server (implicitly also in the Namespace team1 where we are deploying the NetworkPolicy).
 1. `kubectl apply -f network-policy-namespace.yaml -n team1` Lets apply that NetworkPolicy
 1. `kubectl logs deployment/hello-client-allowed -n team1` and `kubectl logs deployment/hello-client-blocked -n team1` both of our Pods in team1 can reach the server
-1. `cd ~/kubernetes-security-demos/demos/network-policy/hello-app`
+1. `cd ~/sysdig-security-demos/demos/network-policy/hello-app`
 1. `kubectl logs deployment/hello-client-allowed -n team2` and `kubectl logs deployment/hello-client-blocked -n team2` but neither of our Pods in team2 can anymore
 
 Now let's try it with labels - which is better for restricting traffic within a Namespace to least privilege:
-1. `cd ~/kubernetes-security-demos/demos/network-policy`
+1. `cd ~/sysdig-security-demos/demos/network-policy`
 1. `cat network-policy-label.yaml` As you can see here we are saying we are allowing traffic from Pods with the label app set to hello to Pods with the label app set to hello-server. 
 1. `kubectl apply -f network-policy-label.yaml -n team1` Lets apply this NetworkPolicy (overwriting the last one as they have the same name)
 1. `kubectl logs deployment/hello-client-blocked -n team1` And now we'll see that our blocked Pod where the app label is not set to hello is now being blocked by the NetworkPolicy
