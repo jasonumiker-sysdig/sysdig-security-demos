@@ -1,5 +1,1 @@
-*.token
-known_tokens.csv
-kube-apiserver
-webhook-config.yaml
-*.log
+sysdig-agent-helm-install.sh

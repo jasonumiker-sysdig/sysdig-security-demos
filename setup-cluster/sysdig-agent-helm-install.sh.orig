@@ -1,7 +1,8 @@
 # Paste in the agent Helm configuration from the Sysdig UI over the top of the 
-# commented out lines below. Then add in your API token and leave the other
-# lines in order to deploy the admission controller without the legacy vuln
-# scanner 
+# commented out lines below (excluding the last sysdig/sysdig-deploy line). 
+# Then add in your API token and leave the other lines in order to deploy the 
+# admission controller without the legacy vulnerability scanner and save as
+# sysdig-agent-helm-install.sh
 
 #kubectl create ns sysdig-agent
 #helm repo add sysdig https://charts.sysdig.com
