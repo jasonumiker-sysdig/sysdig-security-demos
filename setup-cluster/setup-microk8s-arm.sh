@@ -25,7 +25,7 @@ mkdir /root/.kube
 microk8s.config | cat - > /root/.kube/config
 
 # Install the Sysdig Agent
-/home/ubuntu/sysig-agent-helm-install.sh
+/home/ubuntu/sysdig-agent-helm-install.sh
 
 # Set up multi-tenancy
 # Create token for Jane to access team1
