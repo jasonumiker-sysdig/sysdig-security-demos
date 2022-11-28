@@ -1,5 +1,5 @@
 """
-CDK to generate the AWS lab environment for the Kubernetes Opensource Workshop
+CDK to generate the AWS lab environment for the Kubernetes Sysdig Demos
 By Jason Umiker (jason.umiker@sysdig.com)
 """
 
@@ -80,7 +80,7 @@ class AttendeeStack(Stack):
         # Create the EC2 instance for jumpbox
         jumpbox_instance = ec2.Instance(
             self, "Attendee"+str(AttendeeIteration)+"JumpboxInstance",
-            instance_type=ec2.InstanceType("t3a.medium"),
+            instance_type=ec2.InstanceType("c5a.xlarge"),
             machine_image=ubuntu_machine_image,
             role=cluster_admin_role,
             vpc=VPCStack.vpc,
