@@ -43,16 +43,18 @@ echo "--------------------"
 cd ~/sysdig-security-demos/demos
 cat nsenter-node.sh
 echo "--------------------"
-#./nsenter-node.sh
-#ps aux
-#crictl ps
-#crictl ps | grep hello-client-allowed
-#export HELLO_CLIENT_CONTAINER_ID=$(crictl ps | grep hello-client-allowed | awk 'NR==1{print $1}')
-#crictl exec -it $HELLO_CLIENT_CONTAINER_ID /bin/sh
-#set | grep API_KEY
-#exit
-#crictl stop $HELLO_CLIENT_CONTAINER_ID && crictl rm $HELLO_CLIENT_CONTAINER_ID
-#exit
+echo 'Copy and paste this into the terminal below:'
+echo 'ps aux'
+echo 'crictl ps'
+echo 'crictl ps | grep hello-client-allowed'
+echo 'export HELLO_CLIENT_CONTAINER_ID=$(crictl ps | grep hello-client-allowed | awk '\''NR==1{print $1}'\'')'
+echo 'crictl exec -it $HELLO_CLIENT_CONTAINER_ID /bin/sh'
+echo 'set | grep API_KEY'
+echo 'exit'
+echo 'crictl stop $HELLO_CLIENT_CONTAINER_ID && crictl rm $HELLO_CLIENT_CONTAINER_ID'
+echo 'exit'
+./nsenter-node.sh
+echo "--------------------"
 cd ~/sysdig-security-demos/demos/security-playground
 cat app.py
 echo "--------------------"
@@ -61,7 +63,7 @@ echo "--------------------"
 kubectl config use-context microk8s
 echo "--------------------"
 kubectl apply -f security-playground.yaml
-sleep 45
+sleep 60
 echo "--------------------"
 kubectl get pods -n security-playground
 echo "--------------------"

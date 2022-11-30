@@ -35,7 +35,7 @@ snap install helm --classic
 wget -q https://github.com/kubernetes-sigs/cri-tools/releases/download/v1.24.1/crictl-v1.24.1-linux-amd64.tar.gz
 tar zxvf crictl-v1.24.1-linux-amd64.tar.gz -C /usr/local/bin
 rm -f crictl-v1.24.1-linux-amd64.tar.gz
-echo "runtime-endpoint: unix:///var/snap/microk8s/common/run/containerd.sock" > /etc/crictl.yaml
+echo "runtime-endpoint: unix:///var/run/containerd/containerd.sock" > /etc/crictl.yaml
 
 # Set up the kubeconfig
 mkdir /root/.kube
