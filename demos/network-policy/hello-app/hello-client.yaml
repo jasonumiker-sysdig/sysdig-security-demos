@@ -39,6 +39,8 @@ type: Opaque
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  labels:
+    app: hello
   name: hello-client-allowed
 spec:
   # Only run a single pod
@@ -97,6 +99,8 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  labels:
+    app: not-hello
   name: hello-client-blocked
 spec:
 
