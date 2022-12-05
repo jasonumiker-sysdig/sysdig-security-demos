@@ -14,7 +14,6 @@
 #    --set global.kspm.deploy=true \
 #    --set nodeAnalyzer.nodeAnalyzer.benchmarkRunner.deploy=false \
 #    --set global.clusterConfig.name=microk8s-cluster \
-    --set nodeAnalyzer.nodeAnalyzer.runtimeScanner.deploy=true \
     --set nodeAnalyzer.nodeAnalyzer.runtimeScanner.settings.eveEnabled=true \
     --set global.sysdig.secureAPIToken=xxx \
     --set admissionController.enabled=true \

@@ -72,3 +72,9 @@ microk8s start
 mkdir /home/ubuntu/.kube/
 cp /root/.kube/config /home/ubuntu/.kube/config
 chown ubuntu:ubuntu -R /home/ubuntu/.kube
+
+# Install our demos
+kubectl apply -f /home/ubuntu/sysdig-security-demos
+kubectl apply -f /home/ubuntu/sysdig-security-demos/security-playground/security-playground.yaml
+kubectl apply -f /home/ubuntu/sysdig-security-demos/demos/network-policy/hello-app -n team1
+kubectl apply -f /home/ubuntu/sysdig-security-demos/demos/network-policy/hello-app/hello-client.yaml -n team2
