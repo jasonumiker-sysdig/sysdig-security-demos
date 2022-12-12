@@ -13,6 +13,7 @@ multipass transfer ./sysdig-agent-helm-install.sh microk8s-vm-sysdig:/home/ubunt
 multipass exec microk8s-vm-sysdig -- sudo apt update -y
 multipass exec microk8s-vm-sysdig -- sudo apt install dos2unix -y
 multipass exec microk8s-vm-sysdig -- dos2unix //home/ubuntu/bootstrap-microk8s-vm.sh
+multipass exec microk8s-vm-sysdig -- dos2unix //home/ubuntu/sysdig-agent-helm-install.sh
 multipass exec microk8s-vm-sysdig -- chmod +x //home/ubuntu/bootstrap-microk8s-vm.sh
 multipass exec microk8s-vm-sysdig -- chmod +x //home/ubuntu/sysdig-agent-helm-install.sh
 multipass exec microk8s-vm-sysdig -- //home/ubuntu/bootstrap-microk8s-vm.sh
