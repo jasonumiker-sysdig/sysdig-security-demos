@@ -21,8 +21,8 @@ sed -i 's|--containerd=${SNAP_COMMON}/run/containerd.sock|--containerd=/var/run/
 microk8s start
 microk8s status --wait-ready
 
-# Enable CoreDNS, RBAC, hostpath-storage, ingress
-microk8s enable dns rbac hostpath-storage ingress
+# Enable CoreDNS, RBAC, hostpath-storage, ingress, and metrics-server
+microk8s enable dns rbac hostpath-storage ingress metrics-server
 microk8s status --wait-ready
 
 # Install kubectl in microk8s-vm

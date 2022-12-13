@@ -18,4 +18,5 @@
     --set global.sysdig.secureAPIToken=xxx \
     --set admissionController.enabled=true \
     --set admissionController.scanner.enabled=false \
+    --set kspmCollector.probes.initialDelay=30 \
     sysdig/sysdig-deploy
