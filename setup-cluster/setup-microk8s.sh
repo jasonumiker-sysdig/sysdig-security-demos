@@ -2,7 +2,7 @@
 # NOTE: Run this with sudo
 
 # Install microk8s on it
-snap install microk8s --channel=1.24/stable --classic
+snap install microk8s --channel=1.24-eksd/stable --classic
 
 # Move containerd to standard /run and /var/lib runtime paths
 # Periodically I try to reconfigure the Sysdig Agent for the non-standand
@@ -26,7 +26,7 @@ microk8s enable dns rbac hostpath-storage ingress metrics-server
 microk8s status --wait-ready
 
 # Install kubectl in microk8s-vm
-snap install kubectl --classic
+snap install kubectl --channel 1.24/stable --classic
 
 # Install helm in microk8s-vm
 snap install helm --classic
